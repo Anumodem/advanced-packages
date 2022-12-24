@@ -1,66 +1,59 @@
-#include<stdio.h>
-#include<stdbool.h>
-#include<string.h>
-#include<math.h>
-#include<limits.h>
-#include<stdlib.h>
-#include<time.h>
-#define gcu getchar
-int scan()
+#include <stdio.h>
+#define ll long long int
+#define si1(a) scanf("%d",&a)
+#define sil1(a) scanf("%lld",&a)
+#define sil2(a,b) scanf("%lld%lld",&a,&b)
+#define sil3(a,b,c) scanf("%lld%lld%lld",&a,&b,&c)
+#define MOD 1000000007
+#define pil1(a) printf("%lld\n",a)
+ll arr[105];
+ll dp[105][105][260];
+ll dp1[105][260];
+ll n,k;
+ll fact[105];
+ll calc(ll x,ll val,ll num)
 {
-register int v1 = 0;
-char c;
-bool ng = 0;
-c = gcu();
-if( c== '-')
-ng = 1;
-while(c < '0' || c > '9')
-c = gcu();
-while(c >= '0' && c <='9')
-{
-v1 = (v1 << 3) + (v1 << 1) + c - '0';
-c = gcu();
+if(x==n){
+if(val==k){
+return fact[num];
 }
-if (ng)
-v1 = -v1;
-return v1;
+else {
+return 0;
 }
-int *adj[100001],*sz,ans;
-bool *a,*b,*mrk;
-void dfs(int cur,int pr,bool m1,bool m2)
-{
-if((m1^a[cur])!= b[cur])
-{ ++ans;
-mrk[cur]=1;
-m1^=1;
 }
-int i;
-for(i=0;i<sz[cur];++i)
-{ if(adj[cur][i]!=pr)
-{
-dfs(adj[cur][i],cur,m2,m1);}}}
-void solve()
-{
-int n = scan(),m =n++,i,j;
-sz = (int *)calloc(n,sizeof(int));
-a = (bool *)malloc(n*sizeof(bool));
-b=(bool *)malloc(n*sizeof(bool));
-mrk=(bool *)calloc(n,sizeof(bool));
-while(--m)
-{
-i = scan(),j=scan();
-++sz[i];
-++sz[j];
-adj[i] = (int *)realloc(adj[i], sz[i] * sizeof(int));
-adj[j] = (int *) realloc(adj[j], sz[j]* sizeof(int));
-adj[i][sz[i]-1]= j;
-adj[j][sz[j]-1] = i;}
-for(i=1;i<n;++i) a[i] = scan();
-for(i=1;i<n;i++) b[i] = scan();
-dfs(1,0,0,0);
-printf("%d\n",ans);
-for(i=1; ans && i < n;++i)
-{ if(mrk[i])
-printf("%d\n",i),--ans; }}
+if(dp[x][num][val]!=-1){
+return dp[x][num][val];
+}
+ll ctr=(calc(x+1,val|arr[x],num+1)%MOD+calc(x+1,val,num)%MOD)%MOD;
+return dp[x][num][val]=ctr;
+}
 int main()
-{ solve(); return 0;}
+{
+int t;
+si1(t);
+fact[0]=1;
+ll i;
+for(i=1;i<=100;i++){
+fact[i]=(fact[i-1]*i)%MOD;
+}
+while(t--){
+sil2(n,k);
+ll i,j,ctr1=0,p;
+for(i=0;i<n;i++){
+sil1(arr[i]);
+if(arr[i]==k){
+ctr1++;
+}
+}
+for(i=0;i<n+1;i++){
+for(p=0;p<n+1;p++){
+for(j=0;j<260;j++){
+dp[i][p][j]=-1;
+}
+}
+}
+j=calc(0,0,0);
+pil1(j);
+}
+return 0;
+}
